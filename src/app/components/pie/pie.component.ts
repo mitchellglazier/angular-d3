@@ -21,7 +21,7 @@ export class PieComponent implements OnInit {
     this.createSvg();
 
     // getting data from rest api
-    d3.json('https://api.jsonbin.io/b/5eee6a5397cb753b4d149343').then(
+    d3.csv('/assets/frameworks.csv').then(
       (data) => {
         this.createColors(data);
         this.drawChart(data);
