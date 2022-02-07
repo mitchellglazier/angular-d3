@@ -16,6 +16,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { HomeComponent } from './components/home/home.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { HeatComponent } from './components/heat/heat.component';
+import { SparkComponent } from './components/spark/spark.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { HeatComponent } from './components/heat/heat.component';
     ScatterComponent,
     HomeComponent,
     HeatComponent,
+    SparkComponent,
   ],
   imports: [
     BrowserModule,

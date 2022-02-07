@@ -5,12 +5,14 @@ import { BarComponent } from './components/bar/bar.component';
 import { ScatterComponent } from './components/scatter/scatter.component';
 import { HomeComponent } from './components/home/home.component';
 import { HeatComponent } from './components/heat/heat.component';
+import { SparkComponent } from './components/spark/spark.component';
 
 const routes: Routes = [
   { path: 'pie', component: PieComponent },
   { path: 'bar', component: BarComponent },
   { path: 'scatter', component: ScatterComponent },
   { path: 'heat', component: HeatComponent },
+  { path: 'spark', component: SparkComponent },
   { path: '', component: HomeComponent },
 ];
 

@@ -12,21 +12,16 @@ export class HeatComponent implements OnInit {
   private width = 1000 - this.margin.left - this.margin.right;
   private height =  250 - this.margin.top - this.margin.bottom;
   private tooltip;
+  valueRanges: number[];
   year = "2021"
   months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   weeks = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52"]
-  days = [ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",]
+  days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
   constructor() { }
 
   ngOnInit(): void {
-    this.svg = d3.select("#my_dataviz")
-    .append("svg")
-      .attr("width", this.width + this.margin.left + this.margin.right)
-      .attr("height", this.height + this.margin.top + this.margin.bottom)
-    .append("g")
-      .attr("transform",
-        "translate(" + this.margin.left + "," + this.margin.top + ")");
+    this.createSvg()
 
     d3.csv('/assets/callNotes.csv').then(
       (data) => {
@@ -49,8 +44,31 @@ export class HeatComponent implements OnInit {
 
           
         })
+        this.ranges(data)
+        this.drawMap(data)
+        this.addHeaders()
+    })
 
-    // Build X scales and axis:
+  }
+
+  private createSvg(): void {
+    this.svg = d3.select("#my_dataviz")
+    .append("svg")
+      .attr("width", this.width + this.margin.left + this.margin.right)
+      .attr("height", this.height + this.margin.top + this.margin.bottom)
+    .append("g")
+      .attr("transform",
+        "translate(" + this.margin.left + "," + this.margin.top + ")");
+  }
+
+  ranges(data) {
+    this.valueRanges = d3.extent(data, (d: any) => {
+      return parseInt(d.value)
+    })
+  }
+
+  private drawMap(data): void {
+      // Build X scales and axis:
     var x = d3.scaleBand()
     .range([ 0, this.width ])
     .domain(this.weeks)
@@ -74,7 +92,7 @@ export class HeatComponent implements OnInit {
     // Build color scale
     var myColor = d3.scaleLinear<string, number>()
     .range(["white", "blue"])
-    .domain([1,250])
+    .domain([0,this.valueRanges[1]])
 
       // create a tooltip
       this.tooltip = d3.select("#my_dataviz")
@@ -88,6 +106,7 @@ export class HeatComponent implements OnInit {
         .style("border-radius", "5px")
         .style("padding", "5px")
 
+      // mouse hover events
       let mouseover = () => {
         this.tooltip.style("opacity", 1)
       }
@@ -118,9 +137,10 @@ export class HeatComponent implements OnInit {
         .on("mouseover", mouseover)
         .on("mousemove", (event, d) => {return mousemove(event, d)} )
         .on("mouseleave", mouseleave )
-    })
+  }
 
-    this.svg.append("text")
+    addHeaders(): void {
+      this.svg.append("text")
         .attr("x", 0)
         .attr("y", -50)
         .attr("text-anchor", "left")
@@ -243,5 +263,5 @@ export class HeatComponent implements OnInit {
         .style("fill", "grey")
         .style("min-width", "1000px")
         .text("December");
-  }
+    }
 }
